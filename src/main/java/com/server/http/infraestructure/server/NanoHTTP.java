@@ -1,5 +1,6 @@
 package com.server.http.infraestructure.server;
 
+import com.server.http.infraestructure.controllers.FileServer;
 import com.server.http.infraestructure.dto.file.DataListFile;
 import com.server.http.infraestructure.helpers.FileSystemRW;
 import fi.iki.elonen.NanoHTTPD;
@@ -28,51 +29,17 @@ public class NanoHTTP extends NanoHTTPD {
 
     @Override
     public Response serve(IHTTPSession session) {
+
         if (session.getMethod() == Method.POST) {
-            new FileSystemRW().writeFile(folderToServe, session);
+            new FileSystemRW(folderToServe).writeFile(folderToServe, session);
         }
+
         if(session.getQueryParameterString().contains("download=true")){
-            return generateDownload();
-
+            return new FileServer(folderToServe).generateDownload(session);
         }
 
-
+        // default response is list files
         return generateFileListResponse();
-    }
-
-    // Método para obtener el tipo MIME de un archivo basado en su extensión utilizando Apache Tika
-    private String getMimeType(String filename) {
-        MimetypesFileTypeMap fileTypeMap = new MimetypesFileTypeMap();
-        return fileTypeMap.getContentType(filename);
-    }
-
-    private Response generateDownload() {
-        StringBuilder html = new StringBuilder();
-        html.append("<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\"><title>Files</title></head>");
-        html.append("<style> body{ margin: 0; padding: 0; background-color: #cccccc; } </style>");
-        html.append("<body><h1>Available files:</h1><ul>");
-        File[] files = new FileSystemRW().readAllFiles(folderToServe);
-
-        if (files != null && files.length > 0) {
-            // Supongamos que deseamos descargar el primer archivo de la lista (files[0])
-            File fileToDownload = files[0];
-            try {
-                // Abrir un InputStream para leer el contenido del archivo
-                InputStream inputStream = new FileInputStream(fileToDownload);
-                // Establecer los encabezados de la respuesta HTTP
-                Response response = newFixedLengthResponse(Response.Status.OK, getMimeType(fileToDownload.getName()), inputStream, fileToDownload.length());
-                response.addHeader("Content-Disposition", "attachment; filename=\"" + fileToDownload.getName() + "\"");
-
-                return response;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-
-        return newFixedLengthResponse(Response.Status.OK, "text/html", html.toString());
-
-
     }
 
 
@@ -84,7 +51,7 @@ public class NanoHTTP extends NanoHTTPD {
         html.append("<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\"><title>Files</title></head>");
         html.append("<style> body{ margin: 0; padding: 0; background-color: #cccccc; } </style>");
         html.append("<body><h1>Available files:</h1><ul>");
-        File[] files = new FileSystemRW().readAllFiles(folderToServe);
+        File[] files = new FileSystemRW(folderToServe).readAllFiles();
         if (files != null) {
             for (File file : files) {
                 html.append("<li><a href=\"").append(file.getName()).append("\">").append(file.getName()).append("</a></li>");
@@ -96,7 +63,7 @@ public class NanoHTTP extends NanoHTTPD {
                 .append("<input type=\"submit\" value=\"Subir archivo\">")
                 .append("</form></body></html>");
 
-        JSONArray jsonArray = new FileSystemRW().jsonFiles(folderToServe);
+        JSONArray jsonArray = new FileSystemRW(folderToServe).convertListFilesToJSON();
         JSONObject jsonResponse = new JSONObject();
         jsonResponse.put("content", jsonArray);
 

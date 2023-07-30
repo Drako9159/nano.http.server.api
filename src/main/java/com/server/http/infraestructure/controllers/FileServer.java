@@ -1,57 +1,50 @@
 package com.server.http.infraestructure.controllers;
 
+import com.server.http.infraestructure.helpers.FileSystemRW;
+import com.server.http.infraestructure.server.NanoHTTP;
 import fi.iki.elonen.NanoHTTPD;
+import org.json.simple.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
 
-public class FileServer extends NanoHTTPD {
-    public static final int PORT = 8080;
-    private final File folderToServe;
+import static fi.iki.elonen.NanoHTTPD.newFixedLengthResponse;
+
+public class FileServer{
+
+    private File folderToServe;
 
     public FileServer(File folderToServe){
-        super(PORT);
         this.folderToServe = folderToServe;
     }
 
-    @Override
-    public Response serve(IHTTPSession session){
-        String uri = session.getUri();
-        File file = new File(folderToServe, uri);
-        if(file.exists() && file.isFile()){
-            try{
-                FileInputStream fis = new FileInputStream(file);
-                return newChunkedResponse(Response.Status.OK, getMimeTypeForFile(uri), fis);
-            } catch (IOException e){
-                return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, NanoHTTPD.MIME_PLAINTEXT, "Error al ler el archivo");
-            }
-        } else {
-            return newFixedLengthResponse(Response.Status.NOT_FOUND, NanoHTTPD.MIME_PLAINTEXT, "Archivo no encontrado");
+    public NanoHTTPD.Response generateDownload(NanoHTTPD.IHTTPSession session){
+        String[] elements = session.getQueryParameterString().split("element=");
+        String element = elements[1];
+        File file = FileSystemRW.readToDownload(element, this.folderToServe);
+        String mimetype = FileSystemRW.getMimeType(file.getName());
+        try {
+            InputStream inputStream = new FileInputStream(file);
+            NanoHTTPD.Response response = newFixedLengthResponse(NanoHTTPD.Response.Status.OK, mimetype,inputStream, file.length());
+            response.addHeader("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"");
+            return response;
+        } catch (IOException e){
+            e.printStackTrace();
         }
+        JSONObject jsonResponse = new JSONObject();
+        jsonResponse.put("content", "ELEMENT_NOT_FOUND");
+        return newFixedLengthResponse(NanoHTTPD.Response.Status.BAD_REQUEST, "application/json", jsonResponse.toJSONString());
     }
-/*
-    public String getMimeTypeForFile(String uri){
-        return "application/octet-stream";
-    }*/
+
+    public NanoHTTPD.Response getAllFiles(){
 
 
-    private Response generateFileListResponse() {
-        StringBuilder html = new StringBuilder("<html><body><h1>Archivos disponibles:</h1><ul>");
-        File[] files = folderToServe.listFiles();
-        if (files != null) {
-            for (File file : files) {
-                html.append("<li><a href=\"").append(file.getName()).append("\">").append(file.getName()).append("</a></li>");
-            }
-        }
-        html.append("</ul>");
-
-        // Formulario para subir archivos
-        html.append("<form method=\"post\" enctype=\"multipart/form-data\">")
-                .append("<input type=\"file\" name=\"file\"><br>")
-                .append("<input type=\"submit\" value=\"Subir archivo\">")
-                .append("</form></body></html>");
-
-        return newFixedLengthResponse(Response.Status.OK, "text/html", html.toString());
     }
+
+
+
+
 }
