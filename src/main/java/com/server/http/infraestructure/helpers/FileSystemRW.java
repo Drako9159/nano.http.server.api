@@ -2,24 +2,14 @@ package com.server.http.infraestructure.helpers;
 
 import com.server.http.domain.models.FileModel;
 import com.server.http.infraestructure.dto.file.DataListFile;
-import fi.iki.elonen.NanoHTTPD;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
-
-import javax.activation.MimetypesFileTypeMap;
 import java.io.*;
-import java.text.CharacterIterator;
-import java.text.StringCharacterIterator;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 public class FileSystemRW {
-    private File folderToServe;
+    private final File folderToServe;
 
     public FileSystemRW(File folderToServe){
         this.folderToServe = folderToServe;
@@ -45,7 +35,14 @@ public class FileSystemRW {
     public JSONObject convertListFileToJSON(String path){
         JSONObject jsonObject = new JSONObject();
         File file = new File(path);
-        if(file.exists()) {
+        List<DataListFile> dataListFiles = listDataFiles();
+        var isInServer = false;
+        for (DataListFile data: dataListFiles){
+            if(data.path().equals(file.getPath())){
+                isInServer = true;
+            }
+        }
+        if(isInServer) {
             FileModel fileModel = new FileModel(UUID.randomUUID().toString(),
                     file.getName(), Util.getSizeMb(file.length()), file.getPath(),
                     Util.getExtension(file.getName()), file.isFile());
@@ -94,6 +91,7 @@ public class FileSystemRW {
                     outputStream.write(buffer, 0 ,bytesRead);
                 }
             }
+
         }
     }
 

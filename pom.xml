@@ -18,7 +18,7 @@
         <dependency>
             <groupId>org.nanohttpd</groupId> <!-- <groupId>com.nanohttpd</groupId> for 2.1.0 and earlier -->
             <artifactId>nanohttpd</artifactId>
-            <version>2.2.0</version>
+            <version>2.3.1</version>
         </dependency>
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
@@ -27,8 +27,8 @@
         </dependency>
         <dependency>
             <groupId>javax.activation</groupId>
-            <artifactId>javax.activation</artifactId>
-            <version>1.2.0</version>
+            <artifactId>activation</artifactId>
+            <version>1.1.1</version>
         </dependency>
         <dependency>
             <groupId>com.sun.activation</groupId>

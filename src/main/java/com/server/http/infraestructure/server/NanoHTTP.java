@@ -8,8 +8,11 @@ import org.json.simple.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 
 public class NanoHTTP extends NanoHTTPD {
+
+    private String uri;
     private final File folderToServe;
     public static final int PORT = 8080;
 
@@ -19,6 +22,13 @@ public class NanoHTTP extends NanoHTTPD {
         start(NanoHTTPD.SOCKET_READ_TIMEOUT, false);
         System.out.println("\n[server] running point your browser to http://localhost:8080/ \n");
     }
+
+
+
+
+
+
+
 
     @Override
     public Response serve(IHTTPSession session) {
@@ -38,8 +48,6 @@ public class NanoHTTP extends NanoHTTPD {
             return new FileController(folderToServe).generateDownload(session);
         }
 
-
-
         return errorNotFound();
     }
 
@@ -48,6 +56,7 @@ public class NanoHTTP extends NanoHTTPD {
         html.append("<p>Route not found</p>");
         return newFixedLengthResponse(Response.Status.NOT_FOUND, "text/html", html.toString());
     }
+
 
 
     // User interface
