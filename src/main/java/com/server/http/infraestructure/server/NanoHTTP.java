@@ -1,20 +1,13 @@
 package com.server.http.infraestructure.server;
 
-import com.server.http.infraestructure.controllers.FileServer;
-import com.server.http.infraestructure.dto.file.DataListFile;
+import com.server.http.infraestructure.controllers.FileController;
 import com.server.http.infraestructure.helpers.FileSystemRW;
 import fi.iki.elonen.NanoHTTPD;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import javax.activation.MimetypesFileTypeMap;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class NanoHTTP extends NanoHTTPD {
     private final File folderToServe;
@@ -29,19 +22,32 @@ public class NanoHTTP extends NanoHTTPD {
 
     @Override
     public Response serve(IHTTPSession session) {
-
-        if (session.getMethod() == Method.POST) {
-            new FileSystemRW(folderToServe).writeFile(folderToServe, session);
+        if (session.getUri().contains("/api/get-all-files")) {
+            return new FileController(folderToServe).getAllFiles();
+        }
+        if(session.getUri().contains("/api/get-one-file")){
+            return new FileController(folderToServe).getOneFileByPath(session);
         }
 
-        if(session.getQueryParameterString().contains("download=true")){
-            return new FileServer(folderToServe).generateDownload(session);
+        if(session.getUri().contains("/api/upload-one-file")){
+            if(session.getMethod() == Method.POST){
+                return new FileController(folderToServe).uploadOneFile(session);
+            }
+        }
+        if(session.getUri().contains("/api/download-one-file")){
+            return new FileController(folderToServe).generateDownload(session);
         }
 
-        // default response is list files
-        return generateFileListResponse();
+
+
+        return errorNotFound();
     }
 
+    private Response errorNotFound() {
+        StringBuilder html = new StringBuilder();
+        html.append("<p>Route not found</p>");
+        return newFixedLengthResponse(Response.Status.NOT_FOUND, "text/html", html.toString());
+    }
 
 
     // User interface
