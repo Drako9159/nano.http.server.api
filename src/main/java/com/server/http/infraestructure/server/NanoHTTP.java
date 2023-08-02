@@ -45,6 +45,12 @@ public class NanoHTTP extends NanoHTTPD {
             return new FileController(folderToServe).generateDownload(session);
         }
 
+        if(session.getUri().contains("/api/delete-one-file")){
+            if(session.getMethod() == Method.DELETE){
+                return new FileController(folderToServe).deleteOneFile(session);
+            }
+        }
+
         return errorNotFound();
     }
 

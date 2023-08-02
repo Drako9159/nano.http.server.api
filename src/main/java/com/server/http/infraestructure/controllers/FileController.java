@@ -88,6 +88,15 @@ public class FileController {
         return handleError();
     }
 
+    public NanoHTTPD.Response deleteOneFile(NanoHTTPD.IHTTPSession session){
+        String filename = session.getParameters().get("file").get(0);
+        if(!new FileSystemRW(folderToServe).checkFile(filename)){
+          return handleResponse(NanoHTTPD.Response.Status.BAD_REQUEST, "File not found");
+        }
+        new FileSystemRW(folderToServe).eraseFile(filename);
+        return handleResponse(NanoHTTPD.Response.Status.NO_CONTENT, "deleted");
+    }
+
 
 
 
