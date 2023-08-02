@@ -63,19 +63,20 @@ public class FileSystemRW {
     public List<DataListFile> listDataFiles() {
         File[] files = this.folderToServe.listFiles();
         List<DataListFile> dataListFiles = new ArrayList<>();
-
+        assert files != null;
         for (File file : files) {
-            dataListFiles.add(new DataListFile(
-                    UUID.randomUUID().toString(), file.getName(),
-                    Util.getSizeMb(file.length()), file.getPath().replace("\\\\", "/"),
-                    Util.getExtension(file.getName()), file.isFile()));
+            if(!file.getName().equals("temp") && file.isFile()){
+                dataListFiles.add(new DataListFile(
+                        UUID.randomUUID().toString(), file.getName(),
+                        Util.getSizeMb(file.length()), file.getPath().replace("\\\\", "/"),
+                        Util.getExtension(file.getName()), file.isFile()));
+            }
         }
         return dataListFiles;
     }
 
 
     public File[] readAllFiles() {
-        // Filter files by isFile for not include folders
         File[] files = Arrays.stream(this.folderToServe.listFiles())
                 .filter(File::isFile)
                 .toArray(File[]::new);
@@ -94,15 +95,10 @@ public class FileSystemRW {
                 while ((bytesRead = fileInputStream.read(buffer)) != -1){
                     outputStream.write(buffer, 0 ,bytesRead);
                 }
-                File fileTemp = new File(files.get("file"));
-                System.out.println(fileTemp);
-                fileTemp.delete();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        File fileTemp = new File(files.get("file"));
-        fileTemp.delete();
     }
 
 

@@ -55,14 +55,14 @@ public class FileController {
 
     public NanoHTTPD.Response uploadOneFile(NanoHTTPD.IHTTPSession session) {
         try {
-
             Map<String, String> files = new HashMap<>();
             session.parseBody(files);
-            System.out.println(files.get("file"));
-
             String filename = session.getParameters().get("file").get(0);
-            new FileSystemRW(folderToServe).writeFile(files, filename);
-
+            int point = filename.lastIndexOf(".");
+            String extension = filename.substring(point).toLowerCase();
+            String name = filename.substring(0, point);
+            String parseName = name + "_" + System.currentTimeMillis() + extension;
+            new FileSystemRW(folderToServe).writeFile(files, parseName);
             return handleResponse(NanoHTTPD.Response.Status.OK, "Upload successfully");
         } catch (IOException | NanoHTTPD.ResponseException e) {
             e.printStackTrace();
@@ -73,11 +73,7 @@ public class FileController {
 
 
 
-
-
-
-
-    public NanoHTTPD.Response POST(NanoHTTPD.IHTTPSession session) {
+    public NanoHTTPD.Response uploadOneFile2(NanoHTTPD.IHTTPSession session) {
         try {
             Map<String, String> files = new HashMap<String, String>();
             session.parseBody(files);

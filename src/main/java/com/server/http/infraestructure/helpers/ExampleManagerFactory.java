@@ -1,7 +1,6 @@
 package com.server.http.infraestructure.helpers;
 
 import fi.iki.elonen.NanoHTTPD;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -10,23 +9,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ExampleManagerFactory implements NanoHTTPD.TempFileManagerFactory {
+
+    private final String tmpdir;
+
+    public ExampleManagerFactory(String pathServer){
+        this.tmpdir = pathServer;
+    }
+
     @Override
     public NanoHTTPD.TempFileManager create() {
-        return new ExampleManager();
+        return new ExampleManager(tmpdir);
     }
 
     private static class ExampleManager implements  NanoHTTPD.TempFileManager{
-        private final String tmpdir;
+        //private final String tmpdir;
         private final List<NanoHTTPD.TempFile> tempFiles;
+        private final String tmpdir;
 
-        private ExampleManager(){
-            String userHome = System.getProperty("user.home");
-            String userRute = userHome + File.separator + "Documents/Server/temp"; // Puedes cambiar "Documentos" por el nombre de la carpeta que desees
-            File fileCreate = new File(userRute);
+        private ExampleManager(String pathServer){
+            this.tmpdir = pathServer + "/temp";
+
+            File fileCreate = new File(tmpdir);
             if(!fileCreate.exists()){
                 fileCreate.mkdir();
             }
-            tmpdir = userRute;
             tempFiles = new ArrayList<NanoHTTPD.TempFile>();
 
         }
@@ -81,6 +87,7 @@ public class ExampleManagerFactory implements NanoHTTPD.TempFileManagerFactory {
             if (file != null && file.exists()) {
                 file.delete();
             }
+            System.gc();
             // System.gc() can liberate trash, this is recommended for accelerate light temp files
         }
 

@@ -11,9 +11,8 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) {
 
-        String userHome = System.getProperty("user.home");
-        String userRute = userHome + File.separator + "Documents/Server"; // Puedes cambiar "Documentos" por el nombre de la carpeta que desees
-
+        String pathHome = System.getProperty("user.home");
+        String pathServer = pathHome + File.separator + "Documents/Server";
         /*
         ClassLoader classLoader = Main.class.getClassLoader();
         String classFilePath = classLoader.getResource("com/server/http/Main.class").getFile();
@@ -24,13 +23,12 @@ public class Main {
         System.out.println(ruta);*/
 
         try {
-            File folderToServer = new File(userRute);
+            File folderToServer = new File(pathServer);
             if(!folderToServer.exists()){
                 folderToServer.mkdir();
             }
-            //new NanoHTTP(folderToServer);
             NanoHTTP server = new NanoHTTP(folderToServer);
-            server.setTempFileManagerFactory(new ExampleManagerFactory());
+            server.setTempFileManagerFactory(new ExampleManagerFactory(pathServer));
         } catch (IOException e) {
             System.out.println("Couldn't, start server:\n" + e);
         }
