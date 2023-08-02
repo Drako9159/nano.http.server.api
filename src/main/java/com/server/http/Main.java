@@ -1,6 +1,7 @@
 package com.server.http;
 
 
+import com.server.http.infraestructure.helpers.ExampleManagerFactory;
 import com.server.http.infraestructure.server.NanoHTTP;
 import fi.iki.elonen.NanoHTTPD;
 
@@ -27,7 +28,9 @@ public class Main {
             if(!folderToServer.exists()){
                 folderToServer.mkdir();
             }
-            new NanoHTTP(folderToServer);
+            //new NanoHTTP(folderToServer);
+            NanoHTTP server = new NanoHTTP(folderToServer);
+            server.setTempFileManagerFactory(new ExampleManagerFactory());
         } catch (IOException e) {
             System.out.println("Couldn't, start server:\n" + e);
         }

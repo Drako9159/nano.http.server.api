@@ -2,8 +2,10 @@ package com.server.http.infraestructure.helpers;
 
 import com.server.http.domain.models.FileModel;
 import com.server.http.infraestructure.dto.file.DataListFile;
+import fi.iki.elonen.NanoHTTPD;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+
 import java.io.*;
 import java.util.*;
 
@@ -11,15 +13,15 @@ import java.util.*;
 public class FileSystemRW {
     private final File folderToServe;
 
-    public FileSystemRW(File folderToServe){
+    public FileSystemRW(File folderToServe) {
         this.folderToServe = folderToServe;
     }
 
 
-    public JSONArray convertListFilesToJSON(){
+    public JSONArray convertListFilesToJSON() {
         JSONArray jsonArray = new JSONArray();
         List<DataListFile> dataListFiles = listDataFiles();
-        for(DataListFile list: dataListFiles){
+        for (DataListFile list : dataListFiles) {
             Map<String, Object> mapper = new HashMap<>();
             mapper.put("id", list.id());
             mapper.put("name", list.filename());
@@ -32,17 +34,17 @@ public class FileSystemRW {
         return jsonArray;
     }
 
-    public JSONObject convertListFileToJSON(String path){
+    public JSONObject convertListFileToJSON(String path) {
         JSONObject jsonObject = new JSONObject();
         File file = new File(path);
         List<DataListFile> dataListFiles = listDataFiles();
         var isInServer = false;
-        for (DataListFile data: dataListFiles){
-            if(data.path().equals(file.getPath())){
+        for (DataListFile data : dataListFiles) {
+            if (data.path().equals(file.getPath())) {
                 isInServer = true;
             }
         }
-        if(isInServer) {
+        if (isInServer) {
             FileModel fileModel = new FileModel(UUID.randomUUID().toString(),
                     file.getName(), Util.getSizeMb(file.length()), file.getPath(),
                     Util.getExtension(file.getName()), file.isFile());
@@ -51,20 +53,21 @@ public class FileSystemRW {
             jsonObject.put("path", fileModel.getPath());
             jsonObject.put("mimetype", fileModel.getMimetype());
             jsonObject.put("is_file", fileModel.getFile());
-;        } else {
+            ;
+        } else {
             jsonObject.put("message", "File not found");
         }
         return jsonObject;
     }
 
-    public List<DataListFile> listDataFiles(){
+    public List<DataListFile> listDataFiles() {
         File[] files = this.folderToServe.listFiles();
         List<DataListFile> dataListFiles = new ArrayList<>();
 
-        for (File file: files){
+        for (File file : files) {
             dataListFiles.add(new DataListFile(
                     UUID.randomUUID().toString(), file.getName(),
-                    Util.getSizeMb(file.length()),  file.getPath().replace("\\\\", "/"),
+                    Util.getSizeMb(file.length()), file.getPath().replace("\\\\", "/"),
                     Util.getExtension(file.getName()), file.isFile()));
         }
         return dataListFiles;
@@ -84,24 +87,32 @@ public class FileSystemRW {
         File file = new File(this.folderToServe, filename);
         if(file.createNewFile()){
             try(FileOutputStream outputStream = new FileOutputStream(file);
-            FileInputStream fileInputStream = new FileInputStream(new File(files.get("file")))) {
+                FileInputStream fileInputStream = new FileInputStream(new File(files.get("file")));
+            ) {
                 byte[] buffer = new byte[1024];
                 int bytesRead;
-                while ((bytesRead = fileInputStream.read(buffer)) != 1){
+                while ((bytesRead = fileInputStream.read(buffer)) != -1){
                     outputStream.write(buffer, 0 ,bytesRead);
                 }
+                File fileTemp = new File(files.get("file"));
+                System.out.println(fileTemp);
+                fileTemp.delete();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-
         }
+        File fileTemp = new File(files.get("file"));
+        fileTemp.delete();
     }
 
 
-    public static File readToDownload(String element, File folderToServe){
+
+
+
+    public static File readToDownload(String element, File folderToServe) {
         File file = new File(folderToServe + "/" + element);
         return file;
     }
-
-
 
 
 }

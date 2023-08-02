@@ -42,6 +42,7 @@ public class NanoHTTP extends NanoHTTPD {
         if(session.getUri().contains("/api/upload-one-file")){
             if(session.getMethod() == Method.POST){
                 return new FileController(folderToServe).uploadOneFile(session);
+                //return new FileController(folderToServe).POST(session);
             }
         }
         if(session.getUri().contains("/api/download-one-file")){
