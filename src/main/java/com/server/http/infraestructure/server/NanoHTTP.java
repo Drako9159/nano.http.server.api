@@ -51,7 +51,11 @@ public class NanoHTTP extends NanoHTTPD {
             }
         }
 
+        if(session.getUri().equals("/")){
+            return pageContent();
+        }
         return errorNotFound();
+       // return pageContent();
     }
 
     private Response errorNotFound() {
@@ -63,8 +67,7 @@ public class NanoHTTP extends NanoHTTPD {
 
 
     // User interface
-    private Response generateFileListResponse() {
-
+    private Response pageContent() {
         StringBuilder html = new StringBuilder();
         html.append("<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\"><title>Files</title></head>");
         html.append("<style> body{ margin: 0; padding: 0; background-color: #cccccc; } </style>");
@@ -72,7 +75,7 @@ public class NanoHTTP extends NanoHTTPD {
         File[] files = new FileSystemRW(folderToServe).readAllFiles();
         if (files != null) {
             for (File file : files) {
-                html.append("<li><a href=\"").append(file.getName()).append("\">").append(file.getName()).append("</a></li>");
+                html.append("<li><a href=\"api/download-one-file?file=").append(file.getName()).append("\">").append(file.getName()).append("</a></li>");
             }
         }
         html.append("</ul>");
@@ -81,14 +84,12 @@ public class NanoHTTP extends NanoHTTPD {
                 .append("<input type=\"submit\" value=\"Subir archivo\">")
                 .append("</form></body></html>");
 
+        /*
         JSONArray jsonArray = new FileSystemRW(folderToServe).convertListFilesToJSON();
         JSONObject jsonResponse = new JSONObject();
-        jsonResponse.put("content", jsonArray);
+        jsonResponse.put("content", jsonArray);*/
 
-        return newFixedLengthResponse(Response.Status.OK, "application/json", jsonResponse.toJSONString());
-        //return newFixedLengthResponse(Response.Status.OK, "text/html", html.toString());
-        //return newFixedLengthResponse(Response.Status.OK, "application/json", jsonResponse.toJSONString());
+        return newFixedLengthResponse(Response.Status.OK, "text/html", html.toString());
 
     }
-
 }
