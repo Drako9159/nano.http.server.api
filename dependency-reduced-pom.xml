@@ -18,7 +18,7 @@
             <configuration>
               <transformers>
                 <transformer>
-                  <mainClass>com.server.http.infraestructure.controllers.App</mainClass>
+                  <mainClass>com.server.http.Main</mainClass>
                 </transformer>
               </transformers>
             </configuration>

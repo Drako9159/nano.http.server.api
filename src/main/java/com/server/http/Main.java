@@ -22,6 +22,7 @@ public class Main {
         String ruta = projectPath + "files" + File.separator;
         System.out.println(ruta);*/
 
+
         try {
             File folderToServer = new File(pathServer);
             if(!folderToServer.exists()){

@@ -21,8 +21,10 @@ public class FileController {
     }
 
     public NanoHTTPD.Response getAllFiles() {
-        JSONObject jsonResponse = new JSONObject();
-        jsonResponse.put("content", new FileSystemRW(folderToServe).convertListFilesToJSON());
+        Map<String, Object> response = new HashMap<>();
+        response.put("content", new FileSystemRW(folderToServe).convertListFilesToJSON());
+        JSONObject jsonResponse = new JSONObject(response);
+        //jsonResponse.put("content", new FileSystemRW(folderToServe).convertListFilesToJSON());
         return newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "application/json", jsonResponse.toJSONString().replace("\\\\", "/"));
     }
 
@@ -104,12 +106,7 @@ public class FileController {
 
 
 
-
-
-
-
-
-
+  /*
     public NanoHTTPD.Response handleResponse(NanoHTTPD.Response.Status status, String message) {
         JSONObject jsonResponse = new JSONObject();
         jsonResponse.put("message", message);
@@ -120,5 +117,22 @@ public class FileController {
         JSONObject jsonResponse = new JSONObject();
         jsonResponse.put("message", "Internal Server Error");
         return newFixedLengthResponse(NanoHTTPD.Response.Status.INTERNAL_ERROR, "application/json", jsonResponse.toJSONString());
+    }*/
+
+
+    // best repsonse
+    public NanoHTTPD.Response handleResponse(NanoHTTPD.Response.Status status, String message) {
+        Map<String, String> response = new HashMap<>();
+        response.put("message", message);
+        JSONObject jsonResponse = new JSONObject(response);
+        return newFixedLengthResponse(status, "application/json", jsonResponse.toJSONString());
     }
+
+    public NanoHTTPD.Response handleError() {
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Internal Server Error");
+        JSONObject jsonResponse = new JSONObject(response);
+        return newFixedLengthResponse(NanoHTTPD.Response.Status.INTERNAL_ERROR, "application/json", jsonResponse.toJSONString());
+    }
+
 }

@@ -3,13 +3,8 @@ package com.server.http.infraestructure.server;
 import com.server.http.infraestructure.controllers.FileController;
 import com.server.http.infraestructure.helpers.FileSystemRW;
 import fi.iki.elonen.NanoHTTPD;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Field;
-
 public class NanoHTTP extends NanoHTTPD {
 
     private String uri;
@@ -78,16 +73,13 @@ public class NanoHTTP extends NanoHTTPD {
                 html.append("<li><a href=\"api/download-one-file?file=").append(file.getName()).append("\">").append(file.getName()).append("</a></li>");
             }
         }
+
         html.append("</ul>");
-        html.append("<form method=\"post\" enctype=\"multipart/form-data\">")
+        html.append("<form method=\"post\" enctype=\"multipart/form-data\" action=\"/api/upload-one-file\">")
                 .append("<input type=\"file\" name=\"file\"><br>")
                 .append("<input type=\"submit\" value=\"Subir archivo\">")
                 .append("</form></body></html>");
 
-        /*
-        JSONArray jsonArray = new FileSystemRW(folderToServe).convertListFilesToJSON();
-        JSONObject jsonResponse = new JSONObject();
-        jsonResponse.put("content", jsonArray);*/
 
         return newFixedLengthResponse(Response.Status.OK, "text/html", html.toString());
 
