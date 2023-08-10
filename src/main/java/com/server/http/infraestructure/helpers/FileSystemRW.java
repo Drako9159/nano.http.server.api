@@ -16,46 +16,47 @@ public class FileSystemRW {
     }
 
 
+    // TODO change json put for map in all methods
     public JSONArray convertListFilesToJSON() {
         JSONArray jsonArray = new JSONArray();
         List<DataListFile> dataListFiles = listDataFiles();
         for (DataListFile list : dataListFiles) {
-            Map<String, Object> mapper = new HashMap<>();
-            mapper.put("id", list.id());
-            mapper.put("name", list.filename());
-            mapper.put("size", list.size());
-            mapper.put("path", list.path());
-            mapper.put("mimetype", list.mimetype());
-            mapper.put("is_file", list.isFile());
-            jsonArray.add(new JSONObject(mapper));
+            Map<String, Object> response = new HashMap<>();
+            response.put("id", list.id());
+            response.put("name", list.filename());
+            response.put("size", list.size());
+            response.put("path", list.path());
+            response.put("mimetype", list.mimetype());
+            response.put("is_file", list.isFile());
+            jsonArray.add(new JSONObject(response));
         }
         return jsonArray;
     }
 
     public JSONObject convertListFileToJSON(String path) {
-        JSONObject jsonObject = new JSONObject();
+        Map<String, Object> fileMap = new HashMap<>();
         File file = new File(path);
         List<DataListFile> dataListFiles = listDataFiles();
         var isInServer = false;
         for (DataListFile data : dataListFiles) {
             if (data.path().equals(file.getPath())) {
                 isInServer = true;
+                break;
             }
         }
         if (isInServer) {
             FileModel fileModel = new FileModel(UUID.randomUUID().toString(),
                     file.getName(), Util.getSizeMb(file.length()), file.getPath(),
                     Util.getExtension(file.getName()), file.isFile());
-            jsonObject.put("name", fileModel.getId());
-            jsonObject.put("size", fileModel.getSize());
-            jsonObject.put("path", fileModel.getPath());
-            jsonObject.put("mimetype", fileModel.getMimetype());
-            jsonObject.put("is_file", fileModel.getFile());
-            ;
+            fileMap.put("name", fileModel.getId());
+            fileMap.put("size", fileModel.getSize());
+            fileMap.put("path", fileModel.getPath());
+            fileMap.put("mimetype", fileModel.getMimetype());
+            fileMap.put("is_file", fileModel.getFile());
         } else {
-            jsonObject.put("message", "File not found");
+            fileMap.put("message", "File not found");
         }
-        return jsonObject;
+        return new JSONObject(fileMap);
     }
 
     public List<DataListFile> listDataFiles() {
@@ -75,10 +76,9 @@ public class FileSystemRW {
 
 
     public File[] readAllFiles() {
-        File[] files = Arrays.stream(this.folderToServe.listFiles())
+        return Arrays.stream(Objects.requireNonNull(this.folderToServe.listFiles()))
                 .filter(File::isFile)
                 .toArray(File[]::new);
-        return files;
     }
 
 
@@ -101,8 +101,7 @@ public class FileSystemRW {
 
 
     public static File readToDownload(String element, File folderToServe) {
-        File file = new File(folderToServe + "/" + element);
-        return file;
+        return new File(folderToServe + "/" + element);
     }
 
     public boolean checkFile(String filename) {

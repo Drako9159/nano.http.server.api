@@ -120,7 +120,7 @@ public class FileController {
     }*/
 
 
-    // best repsonse
+    // refactor response
     public NanoHTTPD.Response handleResponse(NanoHTTPD.Response.Status status, String message) {
         Map<String, String> response = new HashMap<>();
         response.put("message", message);

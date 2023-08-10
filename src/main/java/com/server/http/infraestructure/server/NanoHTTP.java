@@ -1,22 +1,41 @@
 package com.server.http.infraestructure.server;
 
 import com.server.http.infraestructure.controllers.FileController;
+import com.server.http.infraestructure.helpers.ExampleManagerFactory;
 import com.server.http.infraestructure.helpers.FileSystemRW;
 import fi.iki.elonen.NanoHTTPD;
 import java.io.File;
 import java.io.IOException;
 public class NanoHTTP extends NanoHTTPD {
 
+
     private String uri;
     private final File folderToServe;
+    private final String pathTemp;
     public static final int PORT = 8080;
 
     public NanoHTTP(File folderToServe) throws IOException {
         super(PORT);
         this.folderToServe = folderToServe;
-        start(NanoHTTPD.SOCKET_READ_TIMEOUT, false);
-        System.out.println("\n[server] running point your browser to http://localhost:8080/ \n");
+        this.pathTemp = folderToServe.getPath();
+
+        //start(NanoHTTPD.SOCKET_READ_TIMEOUT, false);
+        //System.out.println("\n[server] running point your browser to http://localhost:8080/ \n");
     }
+
+    public void start() throws IOException {
+        start(NanoHTTPD.SOCKET_READ_TIMEOUT, false);
+        setTempFileManagerFactory(new ExampleManagerFactory(pathTemp));
+        System.out.println("\n[server] running point your browser to http://localhost:8080/ \n");
+
+    }
+    public void stop(){
+
+    }
+
+
+
+
 
 
 
