@@ -1,8 +1,8 @@
 package com.server.http.view;
 
-import com.server.http.Main;
 import com.server.http.ServerRun;
 import com.server.http.view.util.NetworkUtil;
+import com.server.http.view.util.PropertiesRW;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -10,22 +10,31 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.io.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Welcome extends JFrame {
     private boolean serverIsRunning = false;
     private JPanel contentPane;
     private JLabel labelExit;
     private JLabel lblNotify = new JLabel("Server stopped");
+    JTextField txtField = new JTextField();
 
     int xMouse, yMouse;
+
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                try{
+                try {
                     Welcome frame = new Welcome();
                     frame.setVisible(true);
-                } catch(Exception e){
+                    //new PropertiesRW().write("Esto es una prueba");
+
+
+
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -33,7 +42,7 @@ public class Welcome extends JFrame {
 
     }
 
-    public Welcome(){
+    public Welcome() {
         //setIconImage(Toolkit.getDefaultToolkit().getImage(Welcome.class.getResource("/imagenes/aH-40px.png")));
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setBounds(100, 100, 510, 300);
@@ -137,7 +146,7 @@ public class Welcome extends JFrame {
 
         // btn activator
         JPanel btnActivator = new JPanel();
-        btnActivator.setBounds(200, 80, 100, 35);
+        btnActivator.setBounds(200, 80, 100, 30);
         btnActivator.setLayout(null);
         btnActivator.setCursor(new java.awt.Cursor(Cursor.HAND_CURSOR));
         btnActivator.setBackground(Color.GRAY);
@@ -145,7 +154,7 @@ public class Welcome extends JFrame {
 
 
         JLabel lblActivator = new JLabel("Activate");
-        lblActivator.setBounds(0,0,100,36);
+        lblActivator.setBounds(0, 0, 100, 30);
         lblActivator.setHorizontalAlignment(SwingConstants.CENTER);
         lblActivator.setFont(new Font("Roboto", Font.PLAIN, 18));
         btnActivator.add(lblActivator);
@@ -156,23 +165,25 @@ public class Welcome extends JFrame {
                 EventQueue.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        try{
-                            if(!serverIsRunning){
+                        try {
+                            if (!serverIsRunning) {
                                 serverIsRunning = true;
                                 new ServerRun().start();
                                 lblNotify.setText("Server is running");
+
                             } else {
                                 serverIsRunning = false;
                                 new ServerRun().stop();
                                 lblNotify.setText("Server stopped");
 
                             }
-                        } catch(Exception e){
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
                 });
             }
+
             @Override
             public void mouseEntered(MouseEvent e) {
                 btnActivator.setBackground(Color.lightGray);
@@ -187,13 +198,9 @@ public class Welcome extends JFrame {
         });
 
 
-
-
-
-
         // folder selector
         JPanel btnChooser = new JPanel();
-        btnChooser.setBounds(200, 120, 100, 36);
+        btnChooser.setBounds(200, 120, 100, 30);
         btnChooser.setLayout(null);
         btnChooser.setCursor(new java.awt.Cursor(Cursor.HAND_CURSOR));
         btnChooser.setBackground(Color.GRAY);
@@ -201,7 +208,7 @@ public class Welcome extends JFrame {
 
 
         JLabel lblChosser = new JLabel("Folder Serve");
-        lblChosser.setBounds(0,0,100,36);
+        lblChosser.setBounds(0, 0, 100, 30);
         lblChosser.setHorizontalAlignment(SwingConstants.CENTER);
         lblChosser.setFont(new Font("Roboto", Font.PLAIN, 15));
         btnChooser.add(lblChosser);
@@ -213,14 +220,20 @@ public class Welcome extends JFrame {
                 EventQueue.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        try{
+                        try {
                             System.out.println("hello");
-                        } catch(Exception e){
+
+
+                            //new JFileChooser();
+
+
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
                 });
             }
+
             @Override
             public void mouseEntered(MouseEvent e) {
                 btnChooser.setBackground(Color.lightGray);
@@ -235,10 +248,20 @@ public class Welcome extends JFrame {
         });
 
 
+        JPanel pnlInputText = new JPanel();
+        pnlInputText.setBounds(200, 160, 150, 24);
+        pnlInputText.setLayout(null);
+        pnlInputText.setCursor(new java.awt.Cursor(Cursor.HAND_CURSOR));
+        pnlInputText.setBackground(Color.GRAY);
+        panel.add(pnlInputText);
 
 
-
-
+        txtField.setBounds(0, 0, 150, 24);
+        //String tsxt = new PropertiesRW().read().get(0).split(" ")[1];
+        //txtField.setText(tsxt);
+        txtField.setHorizontalAlignment(SwingConstants.LEFT);
+        txtField.setFont(new Font("Roboto Light", Font.PLAIN, 14));
+        pnlInputText.add(txtField);
 
 
         JLabel lblTitulo = new JLabel("IP Available:");

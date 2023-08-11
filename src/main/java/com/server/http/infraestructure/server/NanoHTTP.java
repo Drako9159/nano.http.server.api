@@ -29,12 +29,6 @@ public class NanoHTTP extends NanoHTTPD {
         System.out.println("\n[server] running point your browser to http://localhost:8080/ \n");
 
     }
-    public void stop(){
-
-    }
-
-
-
 
 
 
