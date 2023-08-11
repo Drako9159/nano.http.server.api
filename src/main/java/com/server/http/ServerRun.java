@@ -13,14 +13,8 @@ public class ServerRun {
     private final File pathServer;
 
     public ServerRun(){
-        String pathTotal = System.getProperty("user.home") + File.separator + "Documents/Server";
-        this.pathServer = validateFolder(pathTotal);
-
-        new PropertiesRW().assignServerPath(pathTotal);
-        ///System.out.println(new PropertiesRW().checkIfExistPathServer());
-        //List<String> properties = new PropertiesRW().read();
-        //System.out.println(properties);
-
+        String pathTotal = new PropertiesRW().getPathServer();
+        this.pathServer = validateFolder(new PropertiesRW().getPathServer());
     }
 
     public void start(){
@@ -39,7 +33,7 @@ public class ServerRun {
 
 
     public File validateFolder(String pathTotal){
-        // folder path is in documents
+        // folder path exits
         File folderExist = new File(pathTotal);
         if(!folderExist.exists()){
             folderExist.mkdir();

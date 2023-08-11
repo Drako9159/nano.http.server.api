@@ -17,9 +17,12 @@ import java.util.stream.Collectors;
 public class Welcome extends JFrame {
     private boolean serverIsRunning = false;
     private JPanel contentPane;
+    private JPanel pnlActivator = new JPanel();
     private JLabel labelExit;
     private JLabel lblNotify = new JLabel("Server stopped");
     JTextField txtField = new JTextField();
+
+    private JLabel lblActivator =  new JLabel("Inactive");
 
     int xMouse, yMouse;
 
@@ -30,16 +33,11 @@ public class Welcome extends JFrame {
                 try {
                     Welcome frame = new Welcome();
                     frame.setVisible(true);
-                    //new PropertiesRW().write("Esto es una prueba");
-
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         });
-
     }
 
     public Welcome() {
@@ -48,6 +46,7 @@ public class Welcome extends JFrame {
         setBounds(100, 100, 510, 300);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+
         setContentPane(contentPane);
         contentPane.setLayout(null);
         setResizable(false);
@@ -70,7 +69,7 @@ public class Welcome extends JFrame {
 
 
         //lblNotify = new JLabel(message);
-        lblNotify.setBounds(110, 10, 310, 19);
+        lblNotify.setBounds(10, 10, 450, 19);
         lblNotify.setForeground(new Color(240, 248, 255));
         lblNotify.setFont(new Font("Montserrat", Font.PLAIN, 16));
         pnlNotify.add(lblNotify);
@@ -93,7 +92,7 @@ public class Welcome extends JFrame {
             }
         });
         header.setLayout(null);
-        header.setBackground(Color.WHITE);
+        header.setBackground(Color.darkGray);
         panel.add(header);
 
         //Botón salir
@@ -112,13 +111,13 @@ public class Welcome extends JFrame {
 
             @Override
             public void mouseExited(MouseEvent e) {
-                btnexit.setBackground(Color.white);
-                labelExit.setForeground(Color.black);
+                btnexit.setBackground(Color.darkGray);
+                labelExit.setForeground(Color.gray);
             }
         });
         btnexit.setLayout(null);
         btnexit.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnexit.setBackground(Color.WHITE);
+        btnexit.setBackground(Color.darkGray);
         btnexit.setBounds(460, 0, 53, 36);
         header.add(btnexit);
 
@@ -126,40 +125,23 @@ public class Welcome extends JFrame {
         labelExit.setBounds(0, 0, 53, 36);
         btnexit.add(labelExit);
         labelExit.setHorizontalAlignment(SwingConstants.CENTER);
+        labelExit.setForeground(Color.GRAY);
         labelExit.setFont(new Font("Roboto", Font.PLAIN, 18));
 
-        //Botón Login
-        JPanel btnLogin = new JPanel();
-        btnLogin.setBounds(754, 300, 83, 70);
-        btnLogin.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                //Login login = new Login();
-                //login.setVisible(true);
-                dispose();
-            }
-        });
-        btnLogin.setLayout(null);
-        btnLogin.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnLogin.setBackground(SystemColor.window);
-        panel.add(btnLogin);
-
         // btn activator
-        JPanel btnActivator = new JPanel();
-        btnActivator.setBounds(200, 80, 100, 30);
-        btnActivator.setLayout(null);
-        btnActivator.setCursor(new java.awt.Cursor(Cursor.HAND_CURSOR));
-        btnActivator.setBackground(Color.GRAY);
-        panel.add(btnActivator);
+        pnlActivator.setBounds(150, 80, 100, 30);
+        pnlActivator.setLayout(null);
+        pnlActivator.setCursor(new java.awt.Cursor(Cursor.HAND_CURSOR));
+        pnlActivator.setBackground(Color.GRAY);
+        panel.add(pnlActivator);
 
 
-        JLabel lblActivator = new JLabel("Activate");
         lblActivator.setBounds(0, 0, 100, 30);
         lblActivator.setHorizontalAlignment(SwingConstants.CENTER);
         lblActivator.setFont(new Font("Roboto", Font.PLAIN, 18));
-        btnActivator.add(lblActivator);
+        pnlActivator.add(lblActivator);
 
-        btnActivator.addMouseListener(new MouseAdapter() {
+        pnlActivator.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 EventQueue.invokeLater(new Runnable() {
@@ -170,12 +152,15 @@ public class Welcome extends JFrame {
                                 serverIsRunning = true;
                                 new ServerRun().start();
                                 lblNotify.setText("Server is running");
+                                lblActivator.setText("Active");
+                                pnlActivator.setBackground(Color.green);
 
                             } else {
                                 serverIsRunning = false;
                                 new ServerRun().stop();
                                 lblNotify.setText("Server stopped");
-
+                                lblActivator.setText("Inactive");
+                                pnlActivator.setBackground(Color.lightGray);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -184,30 +169,41 @@ public class Welcome extends JFrame {
                 });
             }
 
+
             @Override
             public void mouseEntered(MouseEvent e) {
-                btnActivator.setBackground(Color.lightGray);
-                lblActivator.setForeground(Color.black);
+                //pnlActivator.setBackground(Color.lightGray);
+                if(!serverIsRunning) {
+                    pnlActivator.setBackground(Color.green);
+                } else {
+                    pnlActivator.setBackground(Color.GRAY);
+                }
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                btnActivator.setBackground(Color.GRAY);
-                lblActivator.setForeground(Color.black);
+
+                if(!serverIsRunning){
+                    pnlActivator.setBackground(Color.GRAY);
+                } else {
+                    pnlActivator.setBackground(Color.green);
+                }
+
+
             }
         });
 
 
         // folder selector
         JPanel btnChooser = new JPanel();
-        btnChooser.setBounds(200, 120, 100, 30);
+        btnChooser.setBounds(150, 120, 100, 30);
         btnChooser.setLayout(null);
         btnChooser.setCursor(new java.awt.Cursor(Cursor.HAND_CURSOR));
         btnChooser.setBackground(Color.GRAY);
         panel.add(btnChooser);
 
 
-        JLabel lblChosser = new JLabel("Folder Serve");
+        JLabel lblChosser = new JLabel("Folder save");
         lblChosser.setBounds(0, 0, 100, 30);
         lblChosser.setHorizontalAlignment(SwingConstants.CENTER);
         lblChosser.setFont(new Font("Roboto", Font.PLAIN, 15));
@@ -221,12 +217,8 @@ public class Welcome extends JFrame {
                     @Override
                     public void run() {
                         try {
-                            System.out.println("hello");
-
-
+                            new PropertiesRW().assignPathServer(txtField.getText());
                             //new JFileChooser();
-
-
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -249,7 +241,7 @@ public class Welcome extends JFrame {
 
 
         JPanel pnlInputText = new JPanel();
-        pnlInputText.setBounds(200, 160, 150, 24);
+        pnlInputText.setBounds(150, 160, 150, 24);
         pnlInputText.setLayout(null);
         pnlInputText.setCursor(new java.awt.Cursor(Cursor.HAND_CURSOR));
         pnlInputText.setBackground(Color.GRAY);
@@ -258,7 +250,7 @@ public class Welcome extends JFrame {
 
         txtField.setBounds(0, 0, 150, 24);
         //String tsxt = new PropertiesRW().read().get(0).split(" ")[1];
-        //txtField.setText(tsxt);
+        txtField.setText(new PropertiesRW().getPathServer());
         txtField.setHorizontalAlignment(SwingConstants.LEFT);
         txtField.setFont(new Font("Roboto Light", Font.PLAIN, 14));
         pnlInputText.add(txtField);
@@ -270,17 +262,17 @@ public class Welcome extends JFrame {
         panel.add(lblTitulo);
         lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
         lblTitulo.setForeground(SystemColor.textHighlight);
-        lblTitulo.setFont(new Font("Roboto Light", Font.PLAIN, 20));
+        lblTitulo.setFont(new Font("Roboto Light", Font.PLAIN, 18));
 
 
-        JPanel panelList = new JPanel();
-        panelList.setBounds(30, 80, 150, 120);
-        panelList.setBackground(Color.GRAY);
-        panel.add(panelList);
-        panelList.setLayout(new FlowLayout());
+        JPanel pnlIpList = new JPanel();
+        pnlIpList.setBounds(30, 80, 110, 70);
+        pnlIpList.setBackground(Color.GRAY);
+        panel.add(pnlIpList);
+        pnlIpList.setLayout(new FlowLayout());
 
         new NetworkUtil().ipList().forEach((e) -> {
-            panelList.add(new JLabel(e));
+            pnlIpList.add(new JLabel(e));
         });
     }
 
