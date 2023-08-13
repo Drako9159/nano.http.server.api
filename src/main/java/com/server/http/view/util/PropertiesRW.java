@@ -62,6 +62,8 @@ public class PropertiesRW {
     }
 
     public void validateProperties(){
+        File properties = new File(pathProperties);
+        if(!properties.exists()) write("created");
         List<String> path_server = read().stream().filter(e -> e.split(" ")[0].equals("PATH_SERVER")).toList();
         if(path_server.isEmpty()){
             String defaultPathServer = System.getProperty("user.home") + File.separator + "Documents/Server";

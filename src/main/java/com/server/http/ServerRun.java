@@ -13,7 +13,6 @@ public class ServerRun {
     private final File pathServer;
 
     public ServerRun(){
-        String pathTotal = new PropertiesRW().getPathServer();
         this.pathServer = validateFolder(new PropertiesRW().getPathServer());
     }
 
@@ -27,10 +26,8 @@ public class ServerRun {
     }
 
     public void stop() throws IOException {
-        new NanoHTTP(pathServer).closeAllConnections();
         new NanoHTTP(pathServer).stop();
     }
-
 
     public File validateFolder(String pathTotal){
         // folder path exits

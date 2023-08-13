@@ -5,15 +5,14 @@ public class FileModel {
     private String id;
     private String filename;
     private String size;
-    private String path;
+
     private String mimetype;
     private Boolean isFile;
 
-    public FileModel(String id, String filename, String size, String path, String mimetype, Boolean isFile) {
+    public FileModel(String id, String filename, String size, String mimetype, Boolean isFile) {
         this.id = id;
         this.filename = filename;
         this.size = size;
-        this.path = path;
         this.mimetype = mimetype;
         this.isFile = isFile;
     }
@@ -40,14 +39,6 @@ public class FileModel {
 
     public void setSize(String size) {
         this.size = size;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
     }
 
     public String getMimetype() {

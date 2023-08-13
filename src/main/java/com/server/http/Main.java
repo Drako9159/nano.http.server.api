@@ -29,7 +29,6 @@ public class Main {
                 folderToServer.mkdir();
             }
             NanoHTTP server = new NanoHTTP(folderToServer);
-            server.setTempFileManagerFactory(new ExampleManagerFactory(pathServer));
         } catch (IOException e) {
             System.out.println("Couldn't, start server:\n" + e);
         }
