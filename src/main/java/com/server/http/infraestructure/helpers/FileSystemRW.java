@@ -35,7 +35,7 @@ public class FileSystemRW {
 
     public JSONObject extraQuery(){
         Map<String, Object> extra = new HashMap<>();
-        extra.put("upload_file", "POST:\\api\\files");
+        extra.put("upload_file", "POST:\\api\\files?upload=true");
         return new JSONObject(extra);
     }
 

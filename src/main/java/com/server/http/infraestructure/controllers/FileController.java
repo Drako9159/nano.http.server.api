@@ -11,6 +11,7 @@ import static fi.iki.elonen.NanoHTTPD.newFixedLengthResponse;
 public class FileController {
 
 
+
     public NanoHTTPD.Response serviceFiles(NanoHTTPD.IHTTPSession session)  {
         if(session.getParameters().get("download") != null){
             String filename = session.getParameters().get("download").get(0);
@@ -36,7 +37,12 @@ public class FileController {
             return handleResponse(NanoHTTPD.Response.Status.NO_CONTENT, new FileSystemRW().deleteFile(filename));
         }
 
-
+        if(session.getParameters().get("upload") != null){
+            String condition = session.getParameters().get("upload").get(0);
+            if(condition.equals("true")){
+                return uploadOneFile(session);
+            }
+        }
 
         Map<String, Object> response = new HashMap<>();
         response.put("files", new FileSystemRW().JSONFiles());
@@ -78,6 +84,10 @@ public class FileController {
         }
         return handleError();
     }*/
+
+    //
+
+
 
 
 

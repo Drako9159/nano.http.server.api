@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Files</title>
+</head>
+
+<body>
+
+<div id="content"></div>
+
+
+<script>
+
+    async function api() {
+        const response = await fetch("http://localhost:8080/api/files");
+        const data = response.json();
+        console.log(data)
+    }
+    api()
+
+</script>
+
+
+</body>
+
+</html>

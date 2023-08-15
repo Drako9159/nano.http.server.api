@@ -8,6 +8,8 @@ import fi.iki.elonen.NanoHTTPD;
 import java.io.File;
 import java.io.IOException;
 
+import static fi.iki.elonen.NanoHTTPD.newFixedLengthResponse;
+
 public class NanoHTTP  {
 
     private NanoHTTPD server;
@@ -21,31 +23,40 @@ public class NanoHTTP  {
     public void start() throws IOException {
         server = new NanoHTTPD(PORT) {
             public Response serve(IHTTPSession session) {
+                //Response res = resDefault();
                 if(session.getUri().contains("/api/files")){
-                    return new FileController().serviceFiles(session);
-                }
-                if (session.getUri().contains("/api/upload-one-file")) {
-                    if (session.getMethod() == Method.POST) {
-                        return new FileController().uploadOneFile(session);
-                    }
+                    return parseResponse(new FileController().serviceFiles(session));
                 }
                 if (session.getUri().equals("/")) {
-                    return pageContent();
+                    return parseResponse(pageContent());
                 }
-                return errorNotFound();
+                return parseResponse(errorNotFound());
             }
         };
+
         server.setTempFileManagerFactory(new ExampleManagerFactory(pathTemp));
         server.start(NanoHTTPD.SOCKET_READ_TIMEOUT, false);
         System.out.println("\n[server] running point your browser to http://localhost:8080/ \n");
 
     }
 
+
+
+
     public void stop() {
         if (server != null) {
             server.stop();
             System.out.println("\n[server] stopped\n");
         }
+    }
+
+
+
+    public NanoHTTPD.Response parseResponse(NanoHTTPD.Response res){
+        res.addHeader("Access-Control-Allow-Origin", "*");
+        res.addHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
+        res.addHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        return res;
     }
 
 /*
@@ -63,13 +74,12 @@ public class NanoHTTP  {
             return pageContent();
         }
         return errorNotFound();
-
     }*/
 
     private NanoHTTPD.Response errorNotFound() {
         StringBuilder html = new StringBuilder();
         html.append("<p>Route not found</p>");
-        return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.NOT_FOUND, "text/html", html.toString());
+        return newFixedLengthResponse(NanoHTTPD.Response.Status.NOT_FOUND, "text/html", html.toString());
     }
 
 
@@ -91,7 +101,6 @@ public class NanoHTTP  {
                 .append("<input type=\"submit\" value=\"Subir archivo\">")
                 .append("</form></body></html>");
 
-
-        return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "text/html", html.toString());
+        return newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "text/html", html.toString());
     }
 }
