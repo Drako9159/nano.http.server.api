@@ -5,25 +5,66 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Files</title>
+    <link rel="stylesheet" type="text/css" href="./style-files.css"/>
 </head>
 
 <body>
 
 <div id="content"></div>
 
-
 <script>
+    const content = document.querySelector("#content")
+    const urlFiles = "http://192.168.1.237:8080/api/files"
 
-    async function api() {
-        const response = await fetch("http://localhost:8080/api/files");
-        const data = response.json();
-        console.log(data)
+
+    const containerFiles = ""
+
+    // charge files
+    async function getFiles() {
+        try{
+            const response = await fetch(urlFiles);
+            const data = await response.json();
+            fileString = ""
+            data.files.forEach((e) => {
+                if(e.file) fileString += `<div class="container-file"><p>${e.file.filename}</p><a href='${urlFiles}?download=${e.file.filename}'>download</a></div>`;
+            })
+            content.innerHTML = fileString;
+        } catch (error){
+            content.innerHTML = `<p>Server is down, please active and reload this page</p>`
+        }
+
     }
-    api()
+    getFiles();
+
+
+
+    async function downloadFile(filename){
+        const response = await fetch(`${urlFiles}?download=${filename}`)
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+    }
+
+    //content += `<div><input type='file' name='file'/><button>upload</button></div>`
+
+
+
+
+
+
+
+
+
+
+
 
 </script>
-
-
 </body>
-
 </html>

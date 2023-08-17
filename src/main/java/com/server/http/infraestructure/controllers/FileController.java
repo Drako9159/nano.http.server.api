@@ -10,8 +10,6 @@ import static fi.iki.elonen.NanoHTTPD.newFixedLengthResponse;
 
 public class FileController {
 
-
-
     public NanoHTTPD.Response serviceFiles(NanoHTTPD.IHTTPSession session)  {
         if(session.getParameters().get("download") != null){
             String filename = session.getParameters().get("download").get(0);

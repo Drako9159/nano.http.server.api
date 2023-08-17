@@ -1,0 +1,43 @@
+
+
+body{
+  margin: 0;
+  padding: 0;
+  background-color: #cccccc;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#content{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin: 5px;
+}
+
+
+.container-file{
+  background-color: rgb(179, 179, 179);
+
+  color: rgb(0, 0, 0);
+  width: 100px;
+  font-size: 13px;
+  overflow: hidden;
+  border-radius: 5px;
+  transition: box-shadow .3s ease;
+  word-wrap: break-word;
+  padding: 5px;
+  box-shadow: 0 0 1px 0 #000000;
+
+}
+
+.container-file p{
+  max-height: 48px;
+  overflow: hidden;
+  line-height: 1.2em;
+  margin: 0;
+}
+
+.container-file:hover{
+  box-shadow:  0 0 2px 0 #000000;
+}

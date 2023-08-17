@@ -6,7 +6,9 @@ import com.server.http.infraestructure.helpers.FileSystemRW;
 import fi.iki.elonen.NanoHTTPD;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import static fi.iki.elonen.NanoHTTPD.newFixedLengthResponse;
 
@@ -23,14 +25,19 @@ public class NanoHTTP  {
     public void start() throws IOException {
         server = new NanoHTTPD(PORT) {
             public Response serve(IHTTPSession session) {
-                //Response res = resDefault();
                 if(session.getUri().contains("/api/files")){
                     return parseResponse(new FileController().serviceFiles(session));
                 }
-                if (session.getUri().equals("/")) {
-                    return parseResponse(pageContent());
+                if(session.getUri().equals("/")){
+                    Response staticFileResponse = serveStaticFiles("/index.html");
+                    return parseResponse(staticFileResponse);
                 }
-                return parseResponse(errorNotFound());
+
+                Response staticFileResponse = serveStaticFiles(session.getUri());
+                return parseResponse(staticFileResponse);
+
+
+               // return parseResponse(errorNotFound());
             }
         };
 
@@ -41,12 +48,27 @@ public class NanoHTTP  {
     }
 
 
-
-
     public void stop() {
         if (server != null) {
             server.stop();
             System.out.println("\n[server] stopped\n");
+        }
+    }
+
+
+    private NanoHTTPD.Response serveStaticFiles(String filePath) {
+        try {
+            String resourcePath = "/static" + filePath; // Ruta relativa a la carpeta de recursos
+            InputStream inputStream = getClass().getResourceAsStream(resourcePath);
+            if (inputStream != null) {
+                String mimeType = NanoHTTPD.getMimeTypeForFile(filePath);
+                return newFixedLengthResponse(NanoHTTPD.Response.Status.OK, mimeType, inputStream, inputStream.available());
+            } else {
+                return newFixedLengthResponse(NanoHTTPD.Response.Status.NOT_FOUND, "text/plain", "Archivo no encontrado");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return newFixedLengthResponse(NanoHTTPD.Response.Status.INTERNAL_ERROR, "text/plain", "Error al servir el archivo");
         }
     }
 
