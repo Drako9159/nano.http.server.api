@@ -3,12 +3,14 @@ package com.server.http.infraestructure.server;
 import com.server.http.infraestructure.controllers.FileController;
 import com.server.http.infraestructure.helpers.ExampleManagerFactory;
 import com.server.http.infraestructure.helpers.FileSystemRW;
+import com.server.http.view.util.NetworkUtil;
 import fi.iki.elonen.NanoHTTPD;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import static fi.iki.elonen.NanoHTTPD.newFixedLengthResponse;
 
@@ -43,8 +45,21 @@ public class NanoHTTP  {
 
         server.setTempFileManagerFactory(new ExampleManagerFactory(pathTemp));
         server.start(NanoHTTPD.SOCKET_READ_TIMEOUT, false);
-        System.out.println("\n[server] running point your browser to http://localhost:8080/ \n");
 
+        List<String> ipList = new NetworkUtil().ipList();
+
+        StringBuilder linealIp = new StringBuilder();
+
+        linealIp.append("[server] running point your browser to http://localhost:8080/");
+        if(!ipList.isEmpty()){
+            linealIp.append(" and");
+            for (String ip:ipList){
+                linealIp.append("http://"+ip+":8080/ ");
+            }
+        }
+        System.out.println(linealIp.toString());
+
+        //System.out.println("\n[server] running point your browser to http://localhost:8080/ "+linealIp+" \n");
     }
 
 
