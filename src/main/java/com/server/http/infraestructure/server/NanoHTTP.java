@@ -52,7 +52,7 @@ public class NanoHTTP  {
 
         linealIp.append("[server] running point your browser to http://localhost:8080/");
         if(!ipList.isEmpty()){
-            linealIp.append(" and");
+            linealIp.append(" and ");
             for (String ip:ipList){
                 linealIp.append("http://"+ip+":8080/ ");
             }
