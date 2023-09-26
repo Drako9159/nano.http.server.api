@@ -1,19 +1,21 @@
 package com.server.http.infraestructure.helpers;
 
-import com.server.http.domain.models.FileModel;
+import com.server.http.helpers.PropertiesValidate;
 import com.server.http.infraestructure.dto.file.DataListFile;
-import com.server.http.view.util.PropertiesRW;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.*;
 
 public class FileSystemRW {
     private final File pathServer;
 
     public FileSystemRW() {
-        this.pathServer = new File(new PropertiesRW().getPathServer());
+        this.pathServer = new File(new PropertiesValidate().getPathServer());
     }
 
 
@@ -33,13 +35,13 @@ public class FileSystemRW {
         return jsonArray;
     }
 
-    public JSONObject extraQuery(){
+    public JSONObject extraQuery() {
         Map<String, Object> extra = new HashMap<>();
         extra.put("upload_file", "POST:\\api\\files?upload=true");
         return new JSONObject(extra);
     }
 
-    public JSONObject JSONFile(String filename){
+    public JSONObject JSONFile(String filename) {
         DataListFile file = listDataFiles().stream().filter(e -> e.filename().equals(filename)).toList().get(0);
         JSONObject fileInfo = createFileInfoJsonObject(file);
         JSONObject options = createOptionsUrlJsonObject(file);
@@ -50,7 +52,7 @@ public class FileSystemRW {
     }
 
 
-    private JSONObject createFileInfoJsonObject(DataListFile file){
+    private JSONObject createFileInfoJsonObject(DataListFile file) {
         Map<String, Object> infoFile = new HashMap<>();
         infoFile.put("id", file.id());
         infoFile.put("filename", file.filename());
@@ -60,7 +62,7 @@ public class FileSystemRW {
         return new JSONObject(infoFile);
     }
 
-    private JSONObject createOptionsUrlJsonObject(DataListFile file){
+    private JSONObject createOptionsUrlJsonObject(DataListFile file) {
         Map<String, Object> options = new HashMap<>();
         options.put("download", "\\api\\files?download=" + file.filename());
         options.put("info", "\\api\\files?file=" + file.filename());
@@ -69,7 +71,7 @@ public class FileSystemRW {
     }
 
 
-    public Map<String, Object> fileToDownload(String filename){
+    public Map<String, Object> fileToDownload(String filename) {
         Map<String, Object> response = new HashMap<>();
         File file = new File(this.pathServer + File.separator + filename);
         try {

@@ -1,8 +1,8 @@
 package com.server.http.view;
 
 import com.server.http.ServerRun;
+import com.server.http.helpers.PropertiesValidate;
 import com.server.http.view.util.NetworkUtil;
-import com.server.http.view.util.PropertiesRW;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -10,9 +10,6 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.io.*;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class Welcome extends JFrame {
     private boolean serverIsRunning = false;
@@ -22,7 +19,7 @@ public class Welcome extends JFrame {
     private JLabel lblNotify = new JLabel("Server stopped");
     JTextField txtField = new JTextField();
 
-    private JLabel lblActivator =  new JLabel("Inactive");
+    private JLabel lblActivator = new JLabel("Inactive");
 
     int xMouse, yMouse;
 
@@ -173,7 +170,7 @@ public class Welcome extends JFrame {
             @Override
             public void mouseEntered(MouseEvent e) {
                 //pnlActivator.setBackground(Color.lightGray);
-                if(!serverIsRunning) {
+                if (!serverIsRunning) {
                     pnlActivator.setBackground(Color.green);
                 } else {
                     pnlActivator.setBackground(Color.GRAY);
@@ -183,7 +180,7 @@ public class Welcome extends JFrame {
             @Override
             public void mouseExited(MouseEvent e) {
 
-                if(!serverIsRunning){
+                if (!serverIsRunning) {
                     pnlActivator.setBackground(Color.GRAY);
                 } else {
                     pnlActivator.setBackground(Color.green);
@@ -217,7 +214,7 @@ public class Welcome extends JFrame {
                     @Override
                     public void run() {
                         try {
-                            new PropertiesRW().assignPathServer(txtField.getText());
+                            new PropertiesValidate().assignPathServer(txtField.getText());
                             //new JFileChooser();
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -250,7 +247,7 @@ public class Welcome extends JFrame {
 
         txtField.setBounds(0, 0, 150, 24);
         //String tsxt = new PropertiesRW().read().get(0).split(" ")[1];
-        txtField.setText(new PropertiesRW().getPathServer());
+        txtField.setText(new PropertiesValidate().getPathServer());
         txtField.setHorizontalAlignment(SwingConstants.LEFT);
         txtField.setFont(new Font("Roboto Light", Font.PLAIN, 14));
         pnlInputText.add(txtField);
