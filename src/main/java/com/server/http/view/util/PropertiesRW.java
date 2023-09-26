@@ -12,16 +12,16 @@ public class PropertiesRW {
 
     public PropertiesRW() {
         this.pathProperties = System.getProperty("user.dir") + File.separator + "config.properties";
-        validateProperties();
+        createDefaultPathServer();
     }
 
 
     public void assignPathServer(String path) {
-        String toConfig = "PATH_SERVER " + path.replace("\\", "/");
+        String toConfig = "PATH_SERVER -> " + path.replace("\\", "/");
         StringBuilder properties = new StringBuilder();
         List<String> elements = read();
         for (String element : elements) {
-            if (element.split(" ")[0].equals("PATH_SERVER")) {
+            if (element.split(" -> ")[0].equals("PATH_SERVER")) {
                 element = toConfig;
             }
             properties.append(element).append("\n");
@@ -33,14 +33,35 @@ public class PropertiesRW {
 
 
     public String getPathServer() {
-        List<String> element = read().stream().filter(e -> e.split(" ")[0].equals("PATH_SERVER")).toList();
+        List<String> element = read().stream().filter(e -> e.split(" -> ")[0].equals("PATH_SERVER")).toList();
+
         try {
-            return element.get(0).split(" ")[1];
+            return element.get(0).split(" -> ")[1];
         } catch (Exception e) {
             e.printStackTrace();
             return "empty";
         }
     }
+
+
+    public void createDefaultPathServer(){
+        File properties = new File(pathProperties);
+        if(!properties.exists()) write("created");
+
+
+        List<String> path_server = read().stream().filter(e -> e.split(" -> ")[0].equals("PATH_SERVER")).toList();
+
+
+
+
+        if(path_server.isEmpty()){
+            String defaultPathServer = System.getProperty("user.home") + File.separator + "Documents/Server";
+            String toConfig = "PATH_SERVER -> " + defaultPathServer.replace("\\", "/");
+            write(toConfig);
+        }
+    }
+
+
 
     private void write(String config) {
         try (FileOutputStream fileOutputStream = new FileOutputStream(this.pathProperties)) {
@@ -51,24 +72,13 @@ public class PropertiesRW {
     }
 
 
-    public List<String> read() {
+    private List<String> read() {
         try (FileInputStream inputStream = new FileInputStream(this.pathProperties);
         ) {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
             return bufferedReader.lines().toList();
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    public void validateProperties(){
-        File properties = new File(pathProperties);
-        if(!properties.exists()) write("created");
-        List<String> path_server = read().stream().filter(e -> e.split(" ")[0].equals("PATH_SERVER")).toList();
-        if(path_server.isEmpty()){
-            String defaultPathServer = System.getProperty("user.home") + File.separator + "Documents/Server";
-            String toConfig = "PATH_SERVER " + defaultPathServer.replace("\\", "/");
-            write(toConfig);
         }
     }
 
