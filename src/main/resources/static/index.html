@@ -5,31 +5,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Files</title>
-    <link rel="stylesheet" type="text/css" href="./style-files.css"/>
+    <link rel="stylesheet" type="text/css" href="./style-files.css" />
 </head>
 
 <body>
 
 <div id="content"></div>
+<div id="upload-container">
+
+    <form id="form">
+        <label for="file">select file</label>
+        <input name="file" type="file" id="file" />
+        <button type="submit">upload</button>
+    </form>
+    <p id="message-upload"></p>
+
+</div>
 
 <script>
-    const content = document.querySelector("#content")
-    //const urlFiles = "http://127.0.0.1:8080/api/files"
+    const urlFiles_ = "http://127.0.0.1:8080/api/files"
     const urlFiles = "/api/files"
+
+    const content = document.querySelector("#content")
+    const uploadContainer = document.querySelector("#upload-container")
+    const file = document.querySelector("#file")
+
+
+    let messageUpload = document.querySelector("#message-upload")
+
+
 
     const containerFiles = ""
 
     // charge files
     async function getFiles() {
-        try{
+        try {
             const response = await fetch(urlFiles);
             const data = await response.json();
             fileString = ""
             data.files.forEach((e) => {
-                if(e.file) fileString += `<div class="container-file"><p>${e.file.filename}</p><a href='${urlFiles}?download=${e.file.filename}'>download</a></div>`;
+                if (e.file) fileString += `<div class="container-file"><p>${e.file.filename}</p><a href='${urlFiles}?download=${e.file.filename}'>download</a></div>`;
             })
             content.innerHTML = fileString;
-        } catch (error){
+        } catch (error) {
             content.innerHTML = `<p>Server is down, please active and reload this page</p>`
         }
 
@@ -37,8 +55,47 @@
     getFiles();
 
 
+    document.getElementById('form').addEventListener('submit', (e) => {
 
-    async function downloadFile(filename){
+        e.preventDefault();
+        const form = document.querySelector("#form")
+        const formData = new FormData(form)
+        fetch(`${urlFiles}?upload=true`, {
+            method: "POST",
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                messageUpload.textContent = data.message
+
+                let timeout = setTimeout(() => {
+                    messageUpload.textContent = ""
+                    clearTimeout(timeout)
+                }, 3500)
+
+
+            })
+            .catch(error => {
+                console.error("Error: ", error);
+                messageUpload.textContent = error.message
+                let timeout = setTimeout(() => {
+                    messageUpload.textContent = ""
+                    clearTimeout(timeout)
+                }, 3500)
+            });
+
+    });
+
+
+
+
+
+
+
+
+
+    async function downloadFile(filename) {
         const response = await fetch(`${urlFiles}?download=${filename}`)
         const blob = await response.blob();
         const url = window.URL.createObjectURL(blob);
@@ -50,6 +107,9 @@
         a.click();
         window.URL.revokeObjectURL(url);
         document.body.removeChild(a);
+    }
+
+    async function uploadFile() {
     }
 
     //content += `<div><input type='file' name='file'/><button>upload</button></div>`
@@ -67,4 +127,5 @@
 
 </script>
 </body>
+
 </html>
