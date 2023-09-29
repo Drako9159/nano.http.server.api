@@ -1,6 +1,6 @@
 package com.server.http.infraestructure.helpers;
 
-import com.server.http.helpers.PropertiesValidate;
+import com.server.http.utils.PropertiesValidate;
 import com.server.http.infraestructure.dto.file.DataListFile;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;

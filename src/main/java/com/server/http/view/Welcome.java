@@ -1,7 +1,7 @@
 package com.server.http.view;
 
 import com.server.http.ServerRun;
-import com.server.http.helpers.PropertiesValidate;
+import com.server.http.utils.PropertiesValidate;
 import com.server.http.view.util.NetworkUtil;
 
 import javax.swing.*;

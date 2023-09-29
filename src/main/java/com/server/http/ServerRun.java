@@ -1,6 +1,6 @@
 package com.server.http;
 
-import com.server.http.helpers.PropertiesValidate;
+import com.server.http.utils.PropertiesValidate;
 import com.server.http.infraestructure.server.NanoHTTP;
 
 import java.io.File;
