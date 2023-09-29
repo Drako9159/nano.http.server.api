@@ -18,7 +18,7 @@
             <configuration>
               <transformers>
                 <transformer>
-                  <mainClass>com.server.http.MainView</mainClass>
+                  <mainClass>com.server.http.MainTerminal</mainClass>
                 </transformer>
               </transformers>
             </configuration>

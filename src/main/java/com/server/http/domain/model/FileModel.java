@@ -1,4 +1,4 @@
-package com.server.http.domain.models;
+package com.server.http.domain.model;
 
 public class FileModel {
 
