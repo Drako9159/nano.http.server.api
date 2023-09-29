@@ -1,8 +1,8 @@
 package com.server.http.view;
 
 import com.server.http.ServerRun;
-import com.server.http.utils.PropertiesValidate;
-import com.server.http.view.util.NetworkUtil;
+import com.server.http.utils.properties.PropertiesValidate;
+import com.server.http.utils.network.NetworkUtil;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

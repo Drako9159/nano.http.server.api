@@ -3,11 +3,10 @@ package com.server.http.infraestructure.server;
 import com.server.http.infraestructure.controllers.FileController;
 import com.server.http.infraestructure.helpers.ExampleManagerFactory;
 import com.server.http.infraestructure.helpers.FileSystemRW;
-import com.server.http.view.util.NetworkUtil;
+import com.server.http.utils.network.NetworkUtil;
 import fi.iki.elonen.NanoHTTPD;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;

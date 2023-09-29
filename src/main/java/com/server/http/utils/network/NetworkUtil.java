@@ -1,4 +1,4 @@
-package com.server.http.view.util;
+package com.server.http.utils.network;
 
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;

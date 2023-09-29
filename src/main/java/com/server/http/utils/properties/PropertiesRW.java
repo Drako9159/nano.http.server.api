@@ -1,4 +1,4 @@
-package com.server.http.utils;
+package com.server.http.utils.properties;
 
 import java.io.*;
 import java.util.List;

@@ -1,6 +1,6 @@
-package com.server.http.utils;
+package com.server.http.utils.properties;
 
-import com.server.http.utils.PropertiesRW;
+import com.server.http.utils.properties.PropertiesRW;
 
 import java.io.File;
 import java.util.List;
