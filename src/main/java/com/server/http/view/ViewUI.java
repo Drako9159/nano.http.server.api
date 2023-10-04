@@ -11,7 +11,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 
-public class Welcome extends JFrame {
+public class ViewUI extends JFrame {
     private boolean serverIsRunning = false;
     private JPanel contentPane;
     private JPanel pnlActivator = new JPanel();
@@ -28,7 +28,7 @@ public class Welcome extends JFrame {
             @Override
             public void run() {
                 try {
-                    Welcome frame = new Welcome();
+                    ViewUI frame = new ViewUI();
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -37,7 +37,7 @@ public class Welcome extends JFrame {
         });
     }
 
-    public Welcome() {
+    public ViewUI() {
         //setIconImage(Toolkit.getDefaultToolkit().getImage(Welcome.class.getResource("/imagenes/aH-40px.png")));
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setBounds(100, 100, 510, 300);

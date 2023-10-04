@@ -1,6 +1,6 @@
 package com.server.http;
 
-import com.server.http.view.Welcome;
+import com.server.http.view.ViewUI;
 
 import java.awt.*;
 
@@ -10,7 +10,7 @@ public class MainView {
             @Override
             public void run() {
                 try{
-                    Welcome frame = new Welcome();
+                    ViewUI frame = new ViewUI();
                     frame.setVisible(true);
                 } catch(Exception e){
                     e.printStackTrace();
