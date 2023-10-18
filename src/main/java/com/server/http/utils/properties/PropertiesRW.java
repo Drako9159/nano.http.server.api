@@ -36,4 +36,66 @@ public class PropertiesRW {
     }
 
 
+    public void searchFile() {
+        var file = new File(pathPropertiesFile);
+        try {
+            if (file.exists()) {
+                System.out.println("File exists");
+            } else {
+                var out = new PrintWriter(new FileWriter(file));
+                out.close();
+                System.out.println("File is created");
+            }
+        } catch (Exception e) {
+            System.out.println("Error in: " + e.getMessage());
+        }
+
+    }
+
+
+    public void addProperty(Property property) {
+        boolean adder = false;
+        var file = new File(pathPropertiesFile);
+        try {
+            adder = file.exists();
+            var out = new PrintWriter(new FileWriter(pathPropertiesFile, adder));
+            out.println(property);
+            out.close();
+            System.out.println("Property " + file + " is added in file");
+        } catch (Exception e) {
+            System.out.println("Error in: " + e.getMessage());
+        }
+    }
+
+    public void findProperty(Property property) {
+        var file = new File(pathPropertiesFile);
+        try {
+            var input = new BufferedReader(new FileReader(pathPropertiesFile));
+            String textLine;
+            textLine = input.readLine();
+            var index = 1;
+            var finder = false;
+            var propertyFind = property.getName();
+            while (textLine != null) {
+                if (propertyFind != null && propertyFind.equalsIgnoreCase(textLine)) {
+                    finder = true;
+                    break;
+                }
+                textLine = input.readLine();
+                index++;
+            }
+            if (finder) {
+                System.out.println("Property " + textLine + " is in index: " + index);
+            } else {
+                System.out.println("Property " + property.getName() + " is not found");
+            }
+            input.close();
+
+        } catch (Exception e) {
+            System.out.println("Error in: " + property.getName());
+        }
+    }
+
+
+
 }

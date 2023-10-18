@@ -1,7 +1,7 @@
 package com.server.http.domain.repository;
 
-import com.server.http.infraestructure.helpers.Util;
 import com.server.http.domain.model.FileModel;
+import com.server.http.infraestructure.helpers.Util;
 import com.server.http.utils.properties.PropertiesValidate;
 
 import java.io.File;

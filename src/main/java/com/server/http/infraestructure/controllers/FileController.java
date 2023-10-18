@@ -45,7 +45,6 @@ public class FileController {
         }
 
         Map<String, Object> response = new HashMap<>();
-        //response.put("files", new FileSystemRW().JSONFiles());
         response.put("files", new ParseJSON().listFiles());
         JSONObject jsonResponse = new JSONObject(response);
         return newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "application/json", jsonResponse.toJSONString().replace("\\\\", "/"));

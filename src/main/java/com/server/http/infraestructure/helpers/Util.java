@@ -6,7 +6,6 @@ import java.text.StringCharacterIterator;
 
 public class Util {
 
-
     public static String getExtension(String name){
         int index = name.lastIndexOf(".");
         String extension = null;
