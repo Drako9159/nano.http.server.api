@@ -1,5 +1,6 @@
 package com.server.http;
 
+import com.server.http.domain.service.FileService;
 import com.server.http.utils.properties.PropertiesValidate;
 import com.server.http.infraestructure.server.NanoHTTP;
 
@@ -18,6 +19,8 @@ public class ServerRun {
         try {
             new NanoHTTP(pathServer).start();
             //server.setTempFileManagerFactory(new ExampleManagerFactory(pathTemp));
+            new FileService().listFiles();
+
         } catch (IOException e) {
             System.out.println("Couldn't, start server:\n" + e);
         }

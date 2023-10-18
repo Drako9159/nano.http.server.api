@@ -1,36 +1,24 @@
 package com.server.http.domain.model;
 
 public class FileModel {
-
-    private String id;
-    private String filename;
+    private String fileName;
     private String size;
-
-    private String mimetype;
+    private String mimeType;
     private Boolean isFile;
 
-    public FileModel(String id, String filename, String size, String mimetype, Boolean isFile) {
-        this.id = id;
-        this.filename = filename;
+    public FileModel(String fileName, String size, String mimeType, Boolean isFile) {
+        this.fileName = fileName;
         this.size = size;
-        this.mimetype = mimetype;
+        this.mimeType = mimeType;
         this.isFile = isFile;
     }
 
-    public String getId() {
-        return id;
+    public String getFileName() {
+        return fileName;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getFilename() {
-        return filename;
-    }
-
-    public void setFilename(String filename) {
-        this.filename = filename;
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
     public String getSize() {
@@ -41,19 +29,19 @@ public class FileModel {
         this.size = size;
     }
 
-    public String getMimetype() {
-        return mimetype;
+    public String getMimeType() {
+        return mimeType;
     }
 
-    public void setMimetype(String mimetype) {
-        this.mimetype = mimetype;
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
     }
 
-    public Boolean getFile() {
+    public Boolean getIsFile() {
         return isFile;
     }
 
-    public void setFile(Boolean file) {
-        isFile = file;
+    public void setIsFile(Boolean isFile) {
+        this.isFile = isFile;
     }
 }

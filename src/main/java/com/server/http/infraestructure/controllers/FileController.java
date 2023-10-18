@@ -1,6 +1,7 @@
 package com.server.http.infraestructure.controllers;
 
-import com.server.http.infraestructure.helpers.FileSystemRW;
+import com.server.http.domain.service.FileService;
+import com.server.http.domain.service.ParseJSON;
 import fi.iki.elonen.NanoHTTPD;
 import org.json.simple.JSONObject;
 import java.io.*;
@@ -13,8 +14,9 @@ public class FileController {
     public NanoHTTPD.Response serviceFiles(NanoHTTPD.IHTTPSession session)  {
         if(session.getParameters().get("download") != null){
             String filename = session.getParameters().get("download").get(0);
-            if(new FileSystemRW().validateFile(filename)) return handleResponse(NanoHTTPD.Response.Status.NOT_FOUND,"File not found");
-            Map<String, Object> response = new FileSystemRW().fileToDownload(filename);
+            if(new FileService().validateFile(filename)) return handleResponse(NanoHTTPD.Response.Status.NOT_FOUND,"File not found");
+            //Map<String, Object> response = new FileSystemRW().fileToDownload(filename);
+            Map<String, Object> response = new FileService().findFileToDownload(filename);
             NanoHTTPD.Response nanoResponse = newFixedLengthResponse(NanoHTTPD.Response.Status.OK, response.get("mimetype").toString(), (FileInputStream) response.get("fileInputStream"), (long) response.get("size"));
             nanoResponse.addHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
             return nanoResponse;
@@ -22,17 +24,17 @@ public class FileController {
 
         if(session.getParameters().get("file") != null){
             String filename = session.getParameters().get("file").get(0);
-            if(new FileSystemRW().validateFile(filename)) return handleResponse(NanoHTTPD.Response.Status.NOT_FOUND, "File not found");
-            new FileSystemRW().JSONFile(filename);
+            if(new FileService().validateFile(filename)) return handleResponse(NanoHTTPD.Response.Status.NOT_FOUND, "File not found");
+           // new ParseJSON().fileByFilename(filename);
             return newFixedLengthResponse(NanoHTTPD.Response.Status.OK,
                     "application/json",
-                    new FileSystemRW().JSONFile(filename).toJSONString().replace("\\\\", "/"));
+                    new ParseJSON().fileByFilename(filename).toJSONString().replace("\\\\", "/"));
         }
 
         if(session.getParameters().get("delete") != null){
             String filename = session.getParameters().get("delete").get(0);
-            if(new FileSystemRW().validateFile(filename)) return handleResponse(NanoHTTPD.Response.Status.NOT_FOUND, "File not found");
-            return handleResponse(NanoHTTPD.Response.Status.NO_CONTENT, new FileSystemRW().deleteFile(filename));
+            if(new FileService().validateFile(filename)) return handleResponse(NanoHTTPD.Response.Status.NOT_FOUND, "File not found");
+            return handleResponse(NanoHTTPD.Response.Status.NO_CONTENT, new FileService().deleteFile(filename));
         }
 
         if(session.getParameters().get("upload") != null){
@@ -43,7 +45,8 @@ public class FileController {
         }
 
         Map<String, Object> response = new HashMap<>();
-        response.put("files", new FileSystemRW().JSONFiles());
+        //response.put("files", new FileSystemRW().JSONFiles());
+        response.put("files", new ParseJSON().listFiles());
         JSONObject jsonResponse = new JSONObject(response);
         return newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "application/json", jsonResponse.toJSONString().replace("\\\\", "/"));
     }
@@ -58,7 +61,7 @@ public class FileController {
             String extension = filename.substring(point).toLowerCase();
             String name = filename.substring(0, point);
             String parseName = name + "_" + System.currentTimeMillis() + extension;
-            new FileSystemRW().writeFile(files, parseName);
+            new FileService().saveFile(files, parseName);
             return handleResponse(NanoHTTPD.Response.Status.OK, "Upload successfully");
         } catch (IOException | NanoHTTPD.ResponseException e) {
             e.printStackTrace();
