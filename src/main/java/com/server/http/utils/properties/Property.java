@@ -1,19 +1,23 @@
 package com.server.http.utils.properties;
 
 public class Property {
-    private String name;
+    private PropertyName name;
     private String value;
 
-    public Property(String name, String value) {
+    public Property(PropertyName name, String value) {
         this.name = name;
         this.value = value;
     }
 
-    public String getName() {
+    public Property(PropertyName name) {
+        this.name = name;
+    }
+
+    public PropertyName getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(PropertyName name) {
         this.name = name;
     }
 

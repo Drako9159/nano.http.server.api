@@ -1,8 +1,8 @@
 package com.server.http;
 
 import com.server.http.domain.service.FileService;
-import com.server.http.utils.properties.PropertiesValidate;
 import com.server.http.infraestructure.server.NanoHTTP;
+import com.server.http.utils.properties.PropertiesValidate;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,8 +11,7 @@ public class ServerRun {
     private final File pathServer;
 
     public ServerRun() {
-        this.pathServer = new PropertiesValidate().getFolderServerPath();
-
+        this.pathServer = new PropertiesValidate().getPathServer();
     }
 
     public void start() {

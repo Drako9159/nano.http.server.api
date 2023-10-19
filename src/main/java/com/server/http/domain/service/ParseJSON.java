@@ -25,7 +25,6 @@ public class ParseJSON {
         }
         JSONObject extraQuery = extraQuery();
         jsonArray.add(extraQuery);
-        System.out.println(jsonArray);
         return jsonArray;
     }
 

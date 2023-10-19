@@ -1,8 +1,11 @@
 package com.server.http.view;
 
 import com.server.http.ServerRun;
-import com.server.http.utils.properties.PropertiesValidate;
 import com.server.http.utils.network.NetworkUtil;
+import com.server.http.utils.properties.PropertiesService;
+import com.server.http.utils.properties.PropertiesValidate;
+import com.server.http.utils.properties.Property;
+import com.server.http.utils.properties.PropertyName;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -29,6 +32,7 @@ public class ViewUI extends JFrame {
             public void run() {
                 try {
                     ViewUI frame = new ViewUI();
+
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -38,6 +42,7 @@ public class ViewUI extends JFrame {
     }
 
     public ViewUI() {
+        new PropertiesValidate();
         //setIconImage(Toolkit.getDefaultToolkit().getImage(Welcome.class.getResource("/imagenes/aH-40px.png")));
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setBounds(100, 100, 510, 300);
@@ -214,7 +219,9 @@ public class ViewUI extends JFrame {
                     @Override
                     public void run() {
                         try {
-                            new PropertiesValidate().assignPathServer(txtField.getText());
+                            //new PropertiesValidate().assignPathServer(txtField.getText());
+                            new PropertiesService().deleteProperty(PropertyName.PATH_SERVER);
+                            new PropertiesService().saveProperty(new Property(PropertyName.PATH_SERVER, txtField.getText()));
                             //new JFileChooser();
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -247,7 +254,7 @@ public class ViewUI extends JFrame {
 
         txtField.setBounds(0, 0, 150, 24);
         //String tsxt = new PropertiesRW().read().get(0).split(" ")[1];
-        txtField.setText(new PropertiesValidate().getPathServer());
+        txtField.setText(new PropertiesService().getPropertyByName(PropertyName.PATH_SERVER).getValue());
         txtField.setHorizontalAlignment(SwingConstants.LEFT);
         txtField.setFont(new Font("Roboto Light", Font.PLAIN, 14));
         pnlInputText.add(txtField);

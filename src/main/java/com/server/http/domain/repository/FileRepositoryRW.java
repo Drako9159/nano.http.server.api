@@ -2,7 +2,8 @@ package com.server.http.domain.repository;
 
 import com.server.http.domain.model.FileModel;
 import com.server.http.infraestructure.helpers.Util;
-import com.server.http.utils.properties.PropertiesValidate;
+import com.server.http.utils.properties.PropertiesService;
+import com.server.http.utils.properties.PropertyName;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,7 +16,7 @@ import java.util.Map;
 
 public class FileRepositoryRW {
 
-    private final File pathServer = new File(new PropertiesValidate().getPathServer());
+    private final File pathServer = new File(new PropertiesService().getPropertyByName(PropertyName.PATH_SERVER).getValue());
 
     public List<FileModel> listFiles() {
         File[] files = this.pathServer.listFiles();

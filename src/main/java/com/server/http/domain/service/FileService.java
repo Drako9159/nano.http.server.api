@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class FileService implements IFileService {
 
-    private FileRepositoryRW fileRepositoryRW = new FileRepositoryRW();
+    private final FileRepositoryRW fileRepositoryRW = new FileRepositoryRW();
 
     @Override
     public List<FileModel> listFiles() {
