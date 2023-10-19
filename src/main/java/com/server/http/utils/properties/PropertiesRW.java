@@ -9,9 +9,8 @@ public class PropertiesRW {
     private final String pathPropertiesFile;
 
     public PropertiesRW() {
-        // default file storage
         this.pathPropertiesFile = System.getProperty("user.dir") + File.separator + "configs.properties";
-        //validateExistProperties();
+
     }
 
     /*public void write(String config) {
