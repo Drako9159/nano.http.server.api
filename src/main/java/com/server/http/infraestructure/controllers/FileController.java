@@ -99,10 +99,6 @@ public class FileController {
 
     //
 
-
-
-
-
     // refactor response
     public NanoHTTPD.Response handleResponse(NanoHTTPD.Response.Status status, String message) {
         Map<String, String> response = new HashMap<>();
