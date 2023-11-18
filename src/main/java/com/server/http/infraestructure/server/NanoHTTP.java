@@ -32,12 +32,16 @@ public class NanoHTTP {
                     Response staticFileResponse = serveStaticFiles("/index.html");
                     return parseResponse(staticFileResponse);
                 }
+/*
+                if (!session.getUri().contains(".")) {
+                    Response htmlResponse = serveStaticHtml(session.getUri());
+                    return parseResponse(htmlResponse);
+                }*/
 
                 Response staticFileResponse = serveStaticFiles(session.getUri());
                 return parseResponse(staticFileResponse);
 
 
-                // return parseResponse(errorNotFound());
             }
         };
 
@@ -71,7 +75,7 @@ public class NanoHTTP {
 
     private NanoHTTPD.Response serveStaticFiles(String filePath) {
         try {
-            String resourcePath = "/static" + filePath; // Ruta relativa a la carpeta de recursos
+            String resourcePath = "/static" + filePath;
             InputStream inputStream = getClass().getResourceAsStream(resourcePath);
             if (inputStream != null) {
                 String mimeType = NanoHTTPD.getMimeTypeForFile(filePath);

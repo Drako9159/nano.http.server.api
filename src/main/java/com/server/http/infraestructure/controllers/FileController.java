@@ -39,6 +39,17 @@ public class FileController {
 
         if(session.getParameters().get("upload") != null){
             String condition = session.getParameters().get("upload").get(0);
+            System.out.println(session.getParameters().get("file"));
+            //System.out.println(session.getParameters());
+/*
+            long contentLength = Long.parseLong(session.getHeaders().get("content-length"));
+            int bytesRead;
+            byte[] buffer = new byte[8192];
+            while((bytesRead = session.getInputStream().read(buffer)) != -1){
+                System.out.println(bytesRead);
+            }*/
+
+
             if(condition.equals("true")){
                 return uploadOneFile(session);
             }
@@ -60,6 +71,7 @@ public class FileController {
             String extension = filename.substring(point).toLowerCase();
             String name = filename.substring(0, point);
             String parseName = name + "_" + System.currentTimeMillis() + extension;
+
             new FileService().saveFile(files, parseName);
             return handleResponse(NanoHTTPD.Response.Status.OK, "Upload successfully");
         } catch (IOException | NanoHTTPD.ResponseException e) {
